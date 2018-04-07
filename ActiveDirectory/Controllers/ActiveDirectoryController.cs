@@ -21,8 +21,7 @@ namespace ActiveDirectory.Controllers
         //Retrieves Current Authenticated User
         public JsonResult WhoAmI()
         {
-            string user = Authorize.GetCurrentAuthUser();
-            return Json(user, JsonRequestBehavior.AllowGet);
+            return Json(Authorize.GetCurrentAuthUser(),JsonRequestBehavior.AllowGet);
         }
 
         //Verifies if current user is in Active Directory Group
@@ -36,15 +35,13 @@ namespace ActiveDirectory.Controllers
         //Get AD Groups - client side
         public JsonResult GetAdGroups()
         {
-            List<string> groups = AD.ADGroups();
-            return Json(groups, JsonRequestBehavior.AllowGet);
+            return Json(AD.ADGroups(), JsonRequestBehavior.AllowGet);
         }
 
         //Returns to client whether is admin
         public bool isAdmin()
         {
-            var rval = Authorize.IsAdmin();
-            return rval;
+            return Authorize.IsAdmin();
         }
 
         //Get all locked users 
@@ -89,7 +86,7 @@ namespace ActiveDirectory.Controllers
                 PrincipalContext Context = new PrincipalContext(ContextType.Domain, "YOURDOMAIN", "username", "password");
                 UserPrincipal user = UserPrincipal.FindByIdentity(Context, IdentityType.SamAccountName, UserName);
 
-                user.SetPassword("password");
+                user.SetPassword("password"); //Not the best idea to hardcode this
                 user.ExpirePasswordNow();
                 bool isLocked = user.IsAccountLockedOut();
                 if (isLocked)
